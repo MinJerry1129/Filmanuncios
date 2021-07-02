@@ -1,0 +1,71 @@
+<resources>
+    <string name="app_name">Filmanuncios</string>
+    <string name="permission_deny">Proderma needs to access to your position as well as your phone to make calls when you ask it to. Allow Phone and Location permissions in your phone settings in order to use Proderma</string>
+    <string name="menu_home">Home</string>
+    <string name="menu_favorite">Favorite</string>
+    <string name="menu_upload">Upload</string>
+    <string name="menu_inbox">Inbox</string>
+    <string name="menu_you">You</string>
+
+    <string name="login_username">Username</string>
+    <string name="login_password">Password</string>
+    <string name="login_signin">Sign in</string>
+    <string name="login_no_account">Have not account? Signup</string>
+    <string name="login_forgot_password">Forgot Password</string>
+
+    <string name="signup_page">Sign Up</string>
+    <string name="signup_phone">Phonenumber(+1234567890)</string>
+    <string name="signup_username">Username</string>
+    <string name="signup_password">password</string>
+    <string name="signup_cpassword">confirm password</string>
+    <string name="signup_email">Email</string>
+    <string name="signup_address">Address</string>
+    <string name="signup">Sign up</string>
+    <string name="signup_already_account">Have you already account? Login</string>
+
+
+    <string name="home_search">Search in Filmanuncios</string>
+    <string name="home_feature_product">Featured Products</string>
+    <string name="home_near_product">Products near you</string>
+    <string name="home_seeall">See All ></string>
+
+
+    <string name="category_filter">Filter</string>
+    <string name="category_price">Price</string>
+    <string name="category_location">Location</string>
+    <string name="category_feature_product">Featured Products</string>
+    <string name="category_feature_user">Featured Users</string>
+    <string name="category_find_product">Find what you want</string>
+
+    <string name="filter_filter">Filter</string>
+    <string name="filter_category">Category</string>
+    <string name="filter_price">How much do you want to pay?</string>
+    <string name="filter_sel_price">Select the price range</string>
+    <string name="filter_distance">Where do you want to look?</string>
+    <string name="filter_distance_approximate">Approximate location.</string>
+    <string name="filter_date">You can see the published product after select date</string>
+
+    <string name="map_location">Current Address</string>
+    <string name="map_sel_location">Search with Location</string>
+
+    <string name="product_chat">Chat</string>
+
+    <string name="user_sales">Sales</string>
+    <string name="user_buy">Buys</string>
+    <string name="user_shipping">Shipping</string>
+    <string name="user_see_location">See Location</string>
+    <string name="user_product">Products</string>
+    <string name="user_review">Reviews</string>
+
+
+    <string name="fav_product">Products</string>
+    <string name="fav_user">Users</string>
+
+    <string name="upload_product_title">Title</string>
+    <string name="upload_product_video">Select Video</string>
+    <string name="upload_product_description">Description</string>
+    <string name="upload_product_price">Price($)</string>
+    <string name="upload_button">Upload Product</string>
+
+
+</resources>
