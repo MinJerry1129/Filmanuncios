@@ -20,6 +20,11 @@ import com.google.android.libraries.places.api.Places;
 import com.mobiledevteam.filmanuncios.home.HomeActivity;
 import com.mobiledevteam.filmanuncios.model.Category;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -29,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Category> mCategory = new ArrayList<>();
 
     private static final int REQUEST_LOCATION = 111;
+    private String loginCheck = "no 1";
+    private String login_status = "no";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
 //            Places.initialize(getBaseContext(),"AIzaSyDx0lfU-akX0HiFDtEUUIJ99rugOB95Ip4");
             Places.initialize(getBaseContext(),"AIzaSyApkOUDEBKVYSBdPv0QNT8kTbonpoK-g4o");
         }
+        readFile();
         setReady();
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,new String[]
@@ -77,6 +85,38 @@ public class MainActivity extends AppCompatActivity {
         Common.getInstance().setmCategory(mCategory);
     }
 
+    private void readFile(){
+        try {
+            FileInputStream fileInputStream = openFileInput("loginstatus.fms");
+            InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            StringBuffer stringBuffer = new StringBuffer();
+            String lines;
+            while((lines = bufferedReader.readLine()) != null){
+                loginCheck = lines;
+            }
+            setValue();
+        }catch (FileNotFoundException e){
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setValue(){
+        Log.d("login status:::", loginCheck);
+        String[] parts = loginCheck.split(" ");
+        if (parts[0].equals("no")){
+            login_status = "no";
+            Log.d("login status:::", loginCheck);
+            Common.getInstance().setLogin_status("no");
+        }else{
+            login_status = "yes";
+            Common.getInstance().setLogin_status("yes");
+            Common.getInstance().setUserID(parts[1]);
+        }
+    }
+
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults){
         super.onRequestPermissionsResult(requestCode,permissions,grantResults);
@@ -104,38 +144,10 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }).show();
         }
-//        Toast.makeText(this, "test", Toast.LENGTH_SHORT).show();
     }
     private void moveToLogin(){
-//        Log.d("lang::", sel_lang);
-//        if(sel_lang.equals("en")){
-//            final Configuration configuration = getResources().getConfiguration();
-//            LocaleHelper.setLocale(getBaseContext(), "en");
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-//                configuration.setLayoutDirection(new Locale("en"));
-//            }
-//            getResources().updateConfiguration(configuration, getResources().getDisplayMetrics());
-//            Common.getInstance().setSelLang("en");
             Intent intent=new Intent(getBaseContext(), HomeActivity.class);
             startActivity(intent);
             finish();
-
-//        }else if(sel_lang.equals("ar")){
-//            final Configuration configuration = getResources().getConfiguration();
-//            LocaleHelper.setLocale(getBaseContext(), "ar");
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-//                configuration.setLayoutDirection(new Locale("ar"));
-//            }
-//            getResources().updateConfiguration(configuration, getResources().getDisplayMetrics());
-//            Common.getInstance().setSelLang("ar");
-//            Intent intent=new Intent(getBaseContext(), HomeActivity.class);
-//            startActivity(intent);
-//            finish();
-//        }else{
-//            Intent intent = new Intent(MainActivity.this, LanguageActivity.class);
-//            startActivity(intent);
-//            finish();
-//        }
-
     }
 }

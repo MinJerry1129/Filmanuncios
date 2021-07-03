@@ -124,7 +124,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private  void writeFile(){
         try {
-            FileOutputStream fileOutputStream = openFileOutput("loginstatus.pdm", MODE_PRIVATE);
+            FileOutputStream fileOutputStream = openFileOutput("loginstatus.fms", MODE_PRIVATE);
             fileOutputStream.write(loginStatus.getBytes());
             fileOutputStream.close();
 

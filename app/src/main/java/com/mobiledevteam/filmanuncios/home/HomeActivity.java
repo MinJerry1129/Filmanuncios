@@ -1,12 +1,19 @@
 package com.mobiledevteam.filmanuncios.home;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
@@ -31,7 +38,7 @@ import com.mobiledevteam.filmanuncios.you.YouHomeActivity;
 
 import java.util.ArrayList;
 
-public class HomeActivity extends AppCompatActivity implements CategoryListAdapter.OnItemClicked{
+public class HomeActivity extends AppCompatActivity implements CategoryListAdapter.OnItemClicked, LocationListener {
     private LinearLayout _menuHome;
     private LinearLayout _menuFav;
     private LinearLayout _menuUpload;
@@ -43,10 +50,24 @@ public class HomeActivity extends AppCompatActivity implements CategoryListAdapt
     ArrayList<Category> mAllCategoryList = new ArrayList<>();
     ArrayList<Product> mAllFeatureProductList = new ArrayList<>();
     ArrayList<Product> mAllNearProductList = new ArrayList<>();
+
+    private LocationManager locationmanager;
+    private String user_id;
+    private String login_status = "no";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        locationmanager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        String provider = locationmanager.getBestProvider(new Criteria(), true);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        locationmanager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 10, this);
+
+
+
         _menuHome= (LinearLayout)findViewById(R.id.menu_home);
         _menuFav= (LinearLayout)findViewById(R.id.menu_fav);
         _menuUpload= (LinearLayout)findViewById(R.id.menu_upload);
@@ -61,6 +82,12 @@ public class HomeActivity extends AppCompatActivity implements CategoryListAdapt
         _categoryReycle.setLayoutManager(layoutManager_category);
         _featureproductRecycle.setLayoutManager(layoutManager_feature_product);
         mAllCategoryList = Common.getInstance().getmCategory();
+
+        login_status = Common.getInstance().getLogin_status();
+        if (login_status.equals("yes")){
+            user_id = Common.getInstance().getUserID();
+        }
+
         setReady();
         getData();
     }
@@ -176,34 +203,80 @@ public class HomeActivity extends AppCompatActivity implements CategoryListAdapt
     }
 
     private void onGoHome(){
-        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-        startActivity(intent);
-        finish();
-    }
-    private void onGoFav(){
-        Intent intent = new Intent(getApplicationContext(), FavHomeActivity.class);
-        startActivity(intent);
-        finish();
-    }
-    private void onGoUpload(){
-        Intent intent = new Intent(getApplicationContext(), UploadHomeActivity.class);
-        startActivity(intent);
-        finish();
 
     }
+    private void onGoFav(){
+        if (login_status.equals("no")){
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+            startActivity(intent);
+            finish();
+        }else{
+            Intent intent = new Intent(getApplicationContext(), FavHomeActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
+    }
+    private void onGoUpload(){
+        if (login_status.equals("no")){
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+            startActivity(intent);
+            finish();
+        }else{
+            Intent intent = new Intent(getApplicationContext(), UploadHomeActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
+    }
+
     private void onGoInbox(){
-        Intent intent = new Intent(getApplicationContext(), InboxHomeActivity.class);
-        startActivity(intent);
-        finish();
+        if (login_status.equals("no")){
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+            startActivity(intent);
+            finish();
+        }else{
+            Intent intent = new Intent(getApplicationContext(), InboxHomeActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
     }
     private void onGoYou(){
-        Intent intent = new Intent(getApplicationContext(), YouHomeActivity.class);
-        startActivity(intent);
-        finish();
+        if (login_status.equals("no")){
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+            startActivity(intent);
+            finish();
+        }else{
+            Intent intent = new Intent(getApplicationContext(), YouHomeActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
     }
 
     @Override
     public void onBackPressed() {
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        Log.d("Location:::", String.valueOf( location.getLatitude()));
+    }
+
+    @Override
+    public void onStatusChanged(String s, int i, Bundle bundle) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String s) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String s) {
 
     }
 }
