@@ -18,15 +18,14 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <ImageView
+                <VideoView
+                    android:id="@+id/video_product"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     app:layout_constraintDimensionRatio="H,16:9"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:src="@drawable/car"
-                    android:scaleType="centerCrop"/>
+                    app:layout_constraintTop_toTopOf="parent"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <LinearLayout
@@ -65,6 +64,7 @@
                 </LinearLayout>
 
                 <TextView
+                    android:id="@+id/txt_product_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="BMW R 1100 S"
@@ -73,6 +73,7 @@
                     android:textStyle="bold"
                     android:layout_marginBottom="5dp"/>
                 <TextView
+                    android:id="@+id/txt_product_description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="The Toyota Corolla is a compact four-door sedan or hatchback. Over its 12 generations on sale, in markets around the world, it's become one of the most widely known and most successful car names ever. It has been the best-selling compact car in the U.S. for much of the last 20 years. The sedan was redesigned for 2020, while the hatchback was new for 2019.\nWith the Corolla, Toyota has a rival for compact cars such as the Honda Civic, Hyundai Elantra, Nissan Sentra, and Volkswagen Jetta."
@@ -100,6 +101,7 @@
                             android:textColor="@color/darkgray"
                             android:textSize="14dp"/>
                         <TextView
+                            android:id="@+id/txt_updatedate"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="2021-06-19"
@@ -115,6 +117,7 @@
                             android:layout_height="20dp"
                             android:src="@drawable/eye"/>
                         <TextView
+                            android:id="@+id/txt_eye"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="128"
@@ -126,6 +129,7 @@
                             android:layout_height="20dp"
                             android:src="@drawable/like"/>
                         <TextView
+                            android:id="@+id/txt_like"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="1"

@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -30,13 +31,16 @@ import com.mobiledevteam.filmanuncios.Common;
 import com.mobiledevteam.filmanuncios.R;
 import com.mobiledevteam.filmanuncios.cell.CategoryListAdapter;
 import com.mobiledevteam.filmanuncios.cell.FavProductAdapter;
+import com.mobiledevteam.filmanuncios.cell.FavUserAdapter;
 import com.mobiledevteam.filmanuncios.cell.HomeFeatureProductAdapter;
 import com.mobiledevteam.filmanuncios.cell.HomeNearProductAdapter;
 import com.mobiledevteam.filmanuncios.home.HomeActivity;
 import com.mobiledevteam.filmanuncios.home.OneProductActivity;
+import com.mobiledevteam.filmanuncios.home.OneUserActivity;
 import com.mobiledevteam.filmanuncios.inbox.InboxHomeActivity;
 import com.mobiledevteam.filmanuncios.model.Category;
 import com.mobiledevteam.filmanuncios.model.FavProduct;
+import com.mobiledevteam.filmanuncios.model.FavUser;
 import com.mobiledevteam.filmanuncios.model.Product;
 import com.mobiledevteam.filmanuncios.upload.UploadHomeActivity;
 import com.mobiledevteam.filmanuncios.you.YouHomeActivity;
@@ -49,12 +53,16 @@ public class FavHomeActivity extends AppCompatActivity {
     private LinearLayout _menuUpload;
     private LinearLayout _menuInbox;
     private LinearLayout _menuYou;
-
     private GridView _favproductGrid;
 
+    private TextView _productTxt;
+    private TextView _userTxt;
+
     ArrayList<FavProduct> mAllFeatureProductList = new ArrayList<>();
+    ArrayList<FavUser> mAllFeatureUserList = new ArrayList<>();
 
     private String userid;
+    private String sel_type="product";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,13 +73,21 @@ public class FavHomeActivity extends AppCompatActivity {
         _menuUpload= (LinearLayout)findViewById(R.id.menu_upload);
         _menuInbox= (LinearLayout)findViewById(R.id.menu_inbox);
         _menuYou= (LinearLayout)findViewById(R.id.menu_you);
-
         _favproductGrid = (GridView) findViewById(R.id.grid_fav_product);
-        userid = Common.getInstance().getUserID();
+        _productTxt = (TextView)findViewById(R.id.txt_fav_product);
+        _userTxt = (TextView)findViewById(R.id.txt_fav_user);
 
+        userid = Common.getInstance().getUserID();
         setReady();
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         getData();
     }
+
     private void setReady() {
         _menuHome.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,16 +119,33 @@ public class FavHomeActivity extends AppCompatActivity {
                 onGoYou();
             }
         });
-//        _favproductGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Intent intent = new Intent(getApplicationContext(), OneProductActivity.class);
-//                startActivity(intent);
-//            }
-//        });
+        _productTxt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                _userTxt.setTextColor(getResources().getColor(R.color.major));
+                _userTxt.setBackgroundColor(getResources().getColor(R.color.white));
+                _productTxt.setTextColor(getResources().getColor(R.color.white));
+                _productTxt.setBackground(getResources().getDrawable(R.drawable.button_background_major));
+                sel_type = "product";
+                initViewFavProduct();
+            }
+        });
+
+        _userTxt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                _productTxt.setTextColor(getResources().getColor(R.color.major));
+                _productTxt.setBackgroundColor(getResources().getColor(R.color.white));
+                _userTxt.setTextColor(getResources().getColor(R.color.white));
+                _userTxt.setBackground(getResources().getDrawable(R.drawable.button_background_major));
+                sel_type = "user";
+                initViewFavUser();
+            }
+        });
     }
 
     private void getData() {
+
         final ProgressDialog progressDialog = new ProgressDialog(this, R.style.AppTheme_Bright_Dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Getting Data...");
@@ -124,7 +157,7 @@ public class FavHomeActivity extends AppCompatActivity {
 
         try {
             Ion.with(this)
-                    .load(Common.getInstance().getBaseURL()+"api/getFavProduct")
+                    .load(Common.getInstance().getBaseURL()+"api/getFavHome")
                     .setJsonObjectBody(json)
                     .asJsonObject()
                     .setCallback(new FutureCallback<JsonObject>() {
@@ -133,7 +166,8 @@ public class FavHomeActivity extends AppCompatActivity {
                             progressDialog.dismiss();
                             Log.d("result::", result.toString());
                             if (result != null) {
-
+                                mAllFeatureProductList = new ArrayList<>();
+                                mAllFeatureUserList = new ArrayList<>();
                                 JsonArray product_array = result.get("favproduct").getAsJsonArray();
                                 for(JsonElement productElement : product_array){
                                     JsonObject theOne = productElement.getAsJsonObject();
@@ -142,27 +176,23 @@ public class FavHomeActivity extends AppCompatActivity {
                                     String title = theOne.get("title").getAsString();
                                     String price = theOne.get("price").getAsString();
                                     String video = theOne.get("video").getAsString();
-
                                     mAllFeatureProductList.add(new FavProduct(id,productid,title,video,price));
                                 }
 
-//                                JsonArray products_array = result.get("productsInfo").getAsJsonArray();
-//
-//                                for(JsonElement productElement : products_array){
-//                                    JsonObject theproduct = productElement.getAsJsonObject();
-//                                    String id = theproduct.get("id").getAsString();
-//                                    String brandid = theproduct.get("brandid").getAsString();
-//                                    String name = theproduct.get("name").getAsString();
-//                                    String price = theproduct.get("price").getAsString();
-//                                    String image = theproduct.get("photo").getAsString();
-//                                    String description = theproduct.get("information").getAsString();
-//                                    if(selLang.equals("ar")){
-//                                        name = theproduct.get("namear").getAsString();
-//                                        description = theproduct.get("informationar").getAsString();
-//                                    }
-//                                    mProduct.add(new HomeProduct(id,brandid,name,price,image,description));
-//                                }
-                                initViewFavProduct();
+                                JsonArray user_array = result.get("favuser").getAsJsonArray();
+                                for(JsonElement userElement : user_array){
+                                    JsonObject theOne = userElement.getAsJsonObject();
+                                    String id = theOne.get("id").getAsString();
+                                    String fuserid = theOne.get("fuserid").getAsString();
+                                    String username = theOne.get("username").getAsString();
+                                    String photo = theOne.get("photo").getAsString();
+                                    mAllFeatureUserList.add(new FavUser(id,fuserid,username, photo));
+                                }
+                                if (sel_type.equals("product")){
+                                    initViewFavProduct();
+                                }else{
+                                    initViewFavUser();
+                                }
                             } else {
 
                             }
@@ -178,6 +208,15 @@ public class FavHomeActivity extends AppCompatActivity {
             public void run() {
                 FavProductAdapter adapter_product = new FavProductAdapter(getBaseContext(), mAllFeatureProductList);
                 _favproductGrid.setAdapter(adapter_product);
+            }
+        });
+    }
+
+    private void initViewFavUser(){
+        this.runOnUiThread(new Runnable() {
+            public void run() {
+                FavUserAdapter adapter_user = new FavUserAdapter(getBaseContext(), mAllFeatureUserList);
+                _favproductGrid.setAdapter(adapter_user);
             }
         });
     }

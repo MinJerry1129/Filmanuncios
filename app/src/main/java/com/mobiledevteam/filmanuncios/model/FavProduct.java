@@ -1,5 +1,7 @@
 package com.mobiledevteam.filmanuncios.model;
 
+import com.mobiledevteam.filmanuncios.Common;
+
 public class FavProduct {
     private String mId;
     private String mProductID;
@@ -21,6 +23,6 @@ public class FavProduct {
     public String getmName() {
         return mName;
     }
-    public String getmVideoID() {return mVideoID;}
+    public String getmVideoID() {return Common.getInstance().getBaseURL() +mVideoID;}
     public String getmPrice() {return mPrice; }
 }
