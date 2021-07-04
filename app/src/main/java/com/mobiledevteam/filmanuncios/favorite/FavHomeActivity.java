@@ -4,9 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
@@ -15,15 +18,25 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
+import com.mobiledevteam.filmanuncios.Common;
 import com.mobiledevteam.filmanuncios.R;
 import com.mobiledevteam.filmanuncios.cell.CategoryListAdapter;
+import com.mobiledevteam.filmanuncios.cell.FavProductAdapter;
 import com.mobiledevteam.filmanuncios.cell.HomeFeatureProductAdapter;
 import com.mobiledevteam.filmanuncios.cell.HomeNearProductAdapter;
 import com.mobiledevteam.filmanuncios.home.HomeActivity;
 import com.mobiledevteam.filmanuncios.home.OneProductActivity;
 import com.mobiledevteam.filmanuncios.inbox.InboxHomeActivity;
 import com.mobiledevteam.filmanuncios.model.Category;
+import com.mobiledevteam.filmanuncios.model.FavProduct;
 import com.mobiledevteam.filmanuncios.model.Product;
 import com.mobiledevteam.filmanuncios.upload.UploadHomeActivity;
 import com.mobiledevteam.filmanuncios.you.YouHomeActivity;
@@ -39,7 +52,9 @@ public class FavHomeActivity extends AppCompatActivity {
 
     private GridView _favproductGrid;
 
-    ArrayList<Product> mAllFeatureProductList = new ArrayList<>();
+    ArrayList<FavProduct> mAllFeatureProductList = new ArrayList<>();
+
+    private String userid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +67,7 @@ public class FavHomeActivity extends AppCompatActivity {
         _menuYou= (LinearLayout)findViewById(R.id.menu_you);
 
         _favproductGrid = (GridView) findViewById(R.id.grid_fav_product);
+        userid = Common.getInstance().getUserID();
 
         setReady();
         getData();
@@ -97,21 +113,70 @@ public class FavHomeActivity extends AppCompatActivity {
     }
 
     private void getData() {
+        final ProgressDialog progressDialog = new ProgressDialog(this, R.style.AppTheme_Bright_Dialog);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Getting Data...");
+        progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+        JsonObject json = new JsonObject();
+        json.addProperty("userid", userid);
 
-        mAllFeatureProductList.add(new Product("1","1","Porsche Boxster car", "1234567890","300"));
-        mAllFeatureProductList.add(new Product("2","1","Toyota Auris 5233 car", "1234567890","200"));
-        mAllFeatureProductList.add(new Product("3","1","Porsche Boxster car", "1234567890","300"));
-        mAllFeatureProductList.add(new Product("4","1","Toyota Auris 5233 car", "1234567890","400"));
-        mAllFeatureProductList.add(new Product("5","1","Porsche Boxster car", "1234567890","300"));
-        mAllFeatureProductList.add(new Product("6","1","Porsche Boxster car", "1234567890","300"));
-        mAllFeatureProductList.add(new Product("7","1","Porsche Boxster car", "1234567890","300"));
-        initViewFavProduct();
+        try {
+            Ion.with(this)
+                    .load(Common.getInstance().getBaseURL()+"api/getFavProduct")
+                    .setJsonObjectBody(json)
+                    .asJsonObject()
+                    .setCallback(new FutureCallback<JsonObject>() {
+                        @Override
+                        public void onCompleted(Exception e, JsonObject result) {
+                            progressDialog.dismiss();
+                            Log.d("result::", result.toString());
+                            if (result != null) {
+
+                                JsonArray product_array = result.get("favproduct").getAsJsonArray();
+                                for(JsonElement productElement : product_array){
+                                    JsonObject theOne = productElement.getAsJsonObject();
+                                    String id = theOne.get("id").getAsString();
+                                    String productid = theOne.get("productid").getAsString();
+                                    String title = theOne.get("title").getAsString();
+                                    String price = theOne.get("price").getAsString();
+                                    String video = theOne.get("video").getAsString();
+
+                                    mAllFeatureProductList.add(new FavProduct(id,productid,title,video,price));
+                                }
+
+//                                JsonArray products_array = result.get("productsInfo").getAsJsonArray();
+//
+//                                for(JsonElement productElement : products_array){
+//                                    JsonObject theproduct = productElement.getAsJsonObject();
+//                                    String id = theproduct.get("id").getAsString();
+//                                    String brandid = theproduct.get("brandid").getAsString();
+//                                    String name = theproduct.get("name").getAsString();
+//                                    String price = theproduct.get("price").getAsString();
+//                                    String image = theproduct.get("photo").getAsString();
+//                                    String description = theproduct.get("information").getAsString();
+//                                    if(selLang.equals("ar")){
+//                                        name = theproduct.get("namear").getAsString();
+//                                        description = theproduct.get("informationar").getAsString();
+//                                    }
+//                                    mProduct.add(new HomeProduct(id,brandid,name,price,image,description));
+//                                }
+                                initViewFavProduct();
+                            } else {
+
+                            }
+                        }
+                    });
+        }catch(Exception e){
+            Toast.makeText(getBaseContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
 
     private void initViewFavProduct(){
         this.runOnUiThread(new Runnable() {
             public void run() {
-                HomeNearProductAdapter adapter_product = new HomeNearProductAdapter(getBaseContext(), mAllFeatureProductList);
+                FavProductAdapter adapter_product = new FavProductAdapter(getBaseContext(), mAllFeatureProductList);
                 _favproductGrid.setAdapter(adapter_product);
             }
         });
