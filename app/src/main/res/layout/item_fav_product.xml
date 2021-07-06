@@ -9,16 +9,6 @@
     android:paddingTop="5dp"
     android:gravity="top|center"
     android:background="@drawable/layout_background_lightgray">
-    <!--    <ImageView-->
-    <!--        android:id="@+id/img_product"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="150dp"-->
-    <!--        android:src="@drawable/car"-->
-    <!--        android:scaleType="centerCrop"/>-->
-<!--    <com.ct7ct7ct7.androidvimeoplayer.view.VimeoPlayerView-->
-<!--        android:id="@+id/vimeo_product"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="150dp"/>-->
     <VideoView
         android:id="@+id/video_product"
         android:layout_width="match_parent"

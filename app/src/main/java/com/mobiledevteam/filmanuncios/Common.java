@@ -15,6 +15,7 @@ public class Common {
     private String imgUrl = "";
     private String upload_category_id = "0";
     private String product_id ;
+    private String seluserID;
 
     public void Comon(){
         //this.baseURL="http://localhost/jsontest/";
@@ -48,4 +49,7 @@ public class Common {
 
     public String getProduct_id() {return product_id;}
     public void setProduct_id(String product_id) {this.product_id = product_id;}
+
+    public String getSeluserID() { return seluserID;}
+    public void setSeluserID(String seluserID) {this.seluserID = seluserID;}
 }

@@ -6,15 +6,19 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
@@ -22,7 +26,14 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
 import com.mobiledevteam.filmanuncios.Common;
 import com.mobiledevteam.filmanuncios.R;
 import com.mobiledevteam.filmanuncios.cell.CategoryListAdapter;
@@ -32,6 +43,8 @@ import com.mobiledevteam.filmanuncios.favorite.FavHomeActivity;
 import com.mobiledevteam.filmanuncios.inbox.InboxHomeActivity;
 import com.mobiledevteam.filmanuncios.login.LoginActivity;
 import com.mobiledevteam.filmanuncios.model.Category;
+import com.mobiledevteam.filmanuncios.model.FavProduct;
+import com.mobiledevteam.filmanuncios.model.FavUser;
 import com.mobiledevteam.filmanuncios.model.Product;
 import com.mobiledevteam.filmanuncios.upload.UploadHomeActivity;
 import com.mobiledevteam.filmanuncios.you.YouHomeActivity;
@@ -50,10 +63,12 @@ public class HomeActivity extends AppCompatActivity implements CategoryListAdapt
     ArrayList<Category> mAllCategoryList = new ArrayList<>();
     ArrayList<Product> mAllFeatureProductList = new ArrayList<>();
     ArrayList<Product> mAllNearProductList = new ArrayList<>();
+    ArrayList<Product> mAllProduct = new ArrayList<>();
 
     private LocationManager locationmanager;
     private String user_id;
     private String login_status = "no";
+    private Location my_location;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,6 +138,7 @@ public class HomeActivity extends AppCompatActivity implements CategoryListAdapt
                 onGoYou();
             }
         });
+        initViewCategory();
 //        _nearproductGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 //            @Override
 //            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -133,21 +149,105 @@ public class HomeActivity extends AppCompatActivity implements CategoryListAdapt
     }
 
     private void getData() {
-        mAllFeatureProductList.add(new Product("1","1","Porsche Boxster car", "1234567890","300"));
-        mAllFeatureProductList.add(new Product("2","1","Toyota Auris 5233 car", "1234567890","200"));
-        mAllFeatureProductList.add(new Product("3","1","Porsche Boxster car", "1234567890","300"));
-        mAllFeatureProductList.add(new Product("2","1","Toyota Auris 5233 car", "1234567890","400"));
-        mAllFeatureProductList.add(new Product("4","1","Porsche Boxster car", "1234567890","300"));
+//        mAllFeatureProductList.add(new Product("1","1","Porsche Boxster car", "1234567890","300"));
+//        mAllNearProductList.add(new Product("4","1","Porsche Boxster car", "1234567890","300"));
 
+        final ProgressDialog progressDialog = new ProgressDialog(this, R.style.AppTheme_Bright_Dialog);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Getting Data...");
+        progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+        JsonObject json = new JsonObject();
 
-        mAllNearProductList.add(new Product("1","1","Porsche Boxster car", "1234567890","300"));
-        mAllNearProductList.add(new Product("2","1","Toyota Auris 5233 car", "1234567890","200"));
-        mAllNearProductList.add(new Product("3","1","Porsche Boxster car", "1234567890","300"));
-        mAllNearProductList.add(new Product("2","1","Toyota Auris 5233 car", "1234567890","400"));
-        mAllNearProductList.add(new Product("4","1","Porsche Boxster car", "1234567890","300"));
-        initViewCategory();
+        Handler handler=new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Ion.with(HomeActivity.this)
+                            .load(Common.getInstance().getBaseURL()+"api/getHomeData")
+                            .setJsonObjectBody(json)
+                            .asJsonObject()
+                            .setCallback(new FutureCallback<JsonObject>() {
+                                @Override
+                                public void onCompleted(Exception e, JsonObject result) {
+                                    progressDialog.dismiss();
+                                    Log.d("result::", result.toString());
+                                    if (result != null) {
+                                        mAllFeatureProductList = new ArrayList<>();
+                                        mAllNearProductList = new ArrayList<>();
+                                        JsonArray product_array = result.get("productsInfo").getAsJsonArray();
+                                        for(JsonElement productElement : product_array){
+                                            JsonObject theOne = productElement.getAsJsonObject();
+                                            String id = theOne.get("id").getAsString();
+                                            String userid = theOne.get("userid").getAsString();
+                                            String title = theOne.get("title").getAsString();
+                                            String price = theOne.get("price").getAsString();
+                                            String video = theOne.get("video").getAsString();
+                                            String latitude = theOne.get("latitude").getAsString();
+                                            String longitude = theOne.get("longitude").getAsString();
+                                            String status = theOne.get("status").getAsString();
+                                            LatLng plocation = new LatLng(Double.parseDouble(latitude), Double.parseDouble(longitude));
+//                                            mAllFeatureProductList.add(new Product(id,userid,title,video,price,plocation));
+//                                            mAllNearProductList.add(new Product(id,userid,title,video,price,plocation));
+                                            mAllProduct.add(new Product(id,userid,title,video,price,plocation,status));
+                                        }
+                                        sortList();
+                                        FeatureList();
+
+                                    } else {
+
+                                    }
+                                }
+                            });
+                }catch(Exception e){
+                    Toast.makeText(getBaseContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            }
+        },6000);
+    }
+
+    private void FeatureList() {
         initViewFeatureProduct();
+    }
+
+    private void sortList() {
+        if (mAllProduct.size() >1){
+
+            for (int i=0; i<mAllProduct.size()-1; i++){
+                float distance1 = calculateDistance(mAllProduct.get(i));
+                for(int j=i+1; j<mAllProduct.size(); j++){
+                    float distance2 = calculateDistance(mAllProduct.get(j));
+                    if (distance1 > distance2){
+                        Product oneproduct = new Product(mAllProduct.get(i).getmId(), mAllProduct.get(i).getmCompanyId(),mAllProduct.get(i).getmName(), mAllProduct.get(i).getmVideoID(), mAllProduct.get(i).getmPrice(), mAllProduct.get(i).getmLocation(), mAllProduct.get(i).getmStatus());
+                        mAllProduct.get(i).setmId(mAllProduct.get(j).getmId());
+                        mAllProduct.get(i).setmCompanyId(mAllProduct.get(j).getmCompanyId());
+                        mAllProduct.get(i).setmName(mAllProduct.get(j).getmName());
+                        mAllProduct.get(i).setmPrice(mAllProduct.get(j).getmPrice());
+                        mAllProduct.get(i).setmVideoID(mAllProduct.get(j).getmVideoID());
+                        mAllProduct.get(i).setmLocation(mAllProduct.get(j).getmLocation());
+                        mAllProduct.get(i).setmStatus(mAllProduct.get(j).getmStatus());
+
+                        mAllProduct.get(j).setmId(oneproduct.getmId());
+                        mAllProduct.get(j).setmCompanyId(oneproduct.getmCompanyId());
+                        mAllProduct.get(j).setmName(oneproduct.getmName());
+                        mAllProduct.get(j).setmPrice(oneproduct.getmPrice());
+                        mAllProduct.get(j).setmVideoID(oneproduct.getmVideoID());
+                        mAllProduct.get(j).setmLocation(oneproduct.getmLocation());
+                        mAllProduct.get(j).setmStatus(oneproduct.getmStatus());
+                    }
+                }
+            }
+        }
         initViewNearProduct();
+    }
+    private float calculateDistance(Product oneProduct){
+        Location loc = new Location("");
+        loc.setLatitude(oneProduct.getmLocation().latitude);
+        loc.setLongitude(oneProduct.getmLocation().longitude);
+        float distanceInMeters = my_location.distanceTo(loc);
+        return distanceInMeters;
     }
 
     private void initViewFeatureProduct(){
@@ -162,15 +262,15 @@ public class HomeActivity extends AppCompatActivity implements CategoryListAdapt
     private void initViewNearProduct(){
         this.runOnUiThread(new Runnable() {
             public void run() {
-                int count_product = mAllNearProductList.size()/2;
-                if(mAllNearProductList.size() % 2 == 1){
+                int count_product = mAllProduct.size()/2;
+                if(mAllProduct.size() % 2 == 1){
                     count_product = count_product + 1;
                 }
                 ViewGroup.LayoutParams layoutParams = _nearproductGrid.getLayoutParams();
                 layoutParams.height = convertDpToPixels(225,getBaseContext()) * count_product; //this is in pixels
                 _nearproductGrid.setLayoutParams(layoutParams);
 
-                HomeNearProductAdapter adapter_product = new HomeNearProductAdapter(getBaseContext(), mAllNearProductList);
+                HomeNearProductAdapter adapter_product = new HomeNearProductAdapter(getBaseContext(), mAllProduct);
                 _nearproductGrid.setAdapter(adapter_product);
             }
         });
@@ -262,6 +362,7 @@ public class HomeActivity extends AppCompatActivity implements CategoryListAdapt
 
     @Override
     public void onLocationChanged(Location location) {
+        my_location = location;
         Log.d("Location:::", String.valueOf( location.getLatitude()));
     }
 

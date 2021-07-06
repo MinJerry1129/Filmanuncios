@@ -106,21 +106,21 @@ public class CategoryProductActivity extends AppCompatActivity {
 //        });
     }
     private void getData() {
-        mAllFeatureProductList.add(new Product("1","1","Porsche Boxster car", "1234567890","300"));
-        mAllFeatureProductList.add(new Product("2","1","Toyota Auris 5233 car", "1234567890","200"));
-        mAllFeatureProductList.add(new Product("3","1","Porsche Boxster car", "1234567890","300"));
-        mAllFeatureProductList.add(new Product("2","1","Toyota Auris 5233 car", "1234567890","400"));
-        mAllFeatureProductList.add(new Product("4","1","Porsche Boxster car", "1234567890","300"));
-
-
-        mAllNearProductList.add(new Product("1","1","Porsche Boxster car", "1234567890","300"));
-        mAllNearProductList.add(new Product("2","1","Toyota Auris 5233 car", "1234567890","200"));
-        mAllNearProductList.add(new Product("3","1","Porsche Boxster car", "1234567890","300"));
-        mAllNearProductList.add(new Product("2","1","Toyota Auris 5233 car", "1234567890","400"));
-        mAllNearProductList.add(new Product("4","1","Porsche Boxster car", "1234567890","300"));
-        initViewFeatureProduct();
-        initViewNearProduct();
-        initViewFeatureUser();
+//        mAllFeatureProductList.add(new Product("1","1","Porsche Boxster car", "1234567890","300"));
+//        mAllFeatureProductList.add(new Product("2","1","Toyota Auris 5233 car", "1234567890","200"));
+//        mAllFeatureProductList.add(new Product("3","1","Porsche Boxster car", "1234567890","300"));
+//        mAllFeatureProductList.add(new Product("2","1","Toyota Auris 5233 car", "1234567890","400"));
+//        mAllFeatureProductList.add(new Product("4","1","Porsche Boxster car", "1234567890","300"));
+//
+//
+//        mAllNearProductList.add(new Product("1","1","Porsche Boxster car", "1234567890","300"));
+//        mAllNearProductList.add(new Product("2","1","Toyota Auris 5233 car", "1234567890","200"));
+//        mAllNearProductList.add(new Product("3","1","Porsche Boxster car", "1234567890","300"));
+//        mAllNearProductList.add(new Product("2","1","Toyota Auris 5233 car", "1234567890","400"));
+//        mAllNearProductList.add(new Product("4","1","Porsche Boxster car", "1234567890","300"));
+//        initViewFeatureProduct();
+//        initViewNearProduct();
+//        initViewFeatureUser();
     }
 
     private void initViewFeatureUser(){

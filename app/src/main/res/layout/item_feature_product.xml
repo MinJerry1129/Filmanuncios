@@ -12,16 +12,26 @@
     android:layout_marginEnd="2dp"
     android:gravity="top|center"
     android:background="@drawable/layout_background_lightgray">
-<!--    <ImageView-->
-<!--        android:id="@+id/img_product"-->
-<!--        android:layout_width="110dp"-->
-<!--        android:layout_height="110dp"-->
-<!--        android:src="@drawable/car"-->
-<!--        android:scaleType="centerCrop"/>-->
-    <com.ct7ct7ct7.androidvimeoplayer.view.VimeoPlayerView
-        android:id="@+id/vimeo_product"
-        android:layout_width="110dp"
-        android:layout_height="110dp"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="150dp">
+        <ImageView
+            android:id="@+id/img_product"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:src="@drawable/car"
+            android:scaleType="centerCrop"/>
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/badge"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_margin="10dp"
+            android:scaleType="centerCrop"
+            />
+    </RelativeLayout>
+
     <TextView
         android:id="@+id/txt_product_price"
         android:layout_width="match_parent"
