@@ -91,8 +91,12 @@ public class OneUserActivity extends AppCompatActivity {
         seluser_id = Common.getInstance().getSeluserID();
         user_id = Common.getInstance().getUserID();
         loginstatus = Common.getInstance().getLogin_status();
-
         setReady();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         getData();
     }
 

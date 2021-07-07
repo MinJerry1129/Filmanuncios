@@ -29,6 +29,7 @@
                     android:layout_height="80dp"
                     app:cardCornerRadius="50dp">
                     <ImageView
+                        android:id="@+id/img_user"
                         android:layout_width="80dp"
                         android:layout_height="80dp"
                         android:scaleType="centerCrop"
@@ -42,6 +43,7 @@
                     android:layout_marginStart="10dp"
                     android:gravity="start|center">
                     <TextView
+                        android:id="@+id/txt_username"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="ZHAD A."
@@ -59,6 +61,7 @@
                             android:rating="5"
                             android:numStars="5"/>
                         <TextView
+                            android:id="@+id/txt_rating"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="110"

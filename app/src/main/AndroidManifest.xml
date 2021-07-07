@@ -22,8 +22,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Filmanuncios"
         android:usesCleartextTraffic="true">
-        <activity android:name=".login.SignUpActivity" android:screenOrientation="portrait"></activity>
-        <activity android:name=".upload.UploadProductActivity" android:screenOrientation="portrait" />
+        <activity android:name=".you.AboutActivity"></activity>
+        <activity android:name=".you.UserProActivity" />
+        <activity android:name=".you.UserProductActivity" />
+        <activity android:name=".you.UserProductListActivity" />
+        <activity android:name=".you.UserInfoActivity" />
+        <activity
+            android:name=".login.SignUpActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".upload.UploadProductActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".home.OneUserActivity"
             android:screenOrientation="portrait" />
@@ -64,8 +73,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".login.LoginActivity"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait">

@@ -14,13 +14,14 @@ public class Common {
     private ArrayList<Category> mCategory;
     private String clinicpagetype;
     private String login_status="no";
-    private String userID="0";
+    private String userID="no";
     private String imgUrl = "";
     private String upload_category_id = "0";
     private String product_id ;
     private String seluserID;
     private String selcategoryID;
     private ArrayList<Product> mAllProduct;
+    private ArrayList<Product> mMyProduct;
     private String minvalue;
     private String maxvalue;
     private String duration;
@@ -83,4 +84,7 @@ public class Common {
 
     public String getPostdate() {return postdate;}
     public void setPostdate(String postdate) {this.postdate = postdate;}
+
+    public ArrayList<Product> getmMyProduct() {return mMyProduct;}
+    public void setmMyProduct(ArrayList<Product> mMyProduct) {this.mMyProduct = mMyProduct;}
 }
