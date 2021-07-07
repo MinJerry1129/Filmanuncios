@@ -212,6 +212,7 @@ public class OneUserActivity extends AppCompatActivity {
     private void setData() {
         _userTxt.setText(username);
         _addressTxt.setText(address);
+        _productTxt.setText(String.valueOf(mAllProduct.size()));
         Glide.with(this).asBitmap().load(Uri.parse(Common.getInstance().getBaseURL() + imgurl)).into(_userImg);
     }
 

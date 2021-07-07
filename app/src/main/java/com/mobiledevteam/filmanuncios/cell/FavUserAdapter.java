@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.ct7ct7ct7.androidvimeoplayer.view.VimeoPlayerView;
 import com.koushikdutta.ion.Ion;
+import com.mobiledevteam.filmanuncios.Common;
 import com.mobiledevteam.filmanuncios.R;
 import com.mobiledevteam.filmanuncios.home.OneProductActivity;
 import com.mobiledevteam.filmanuncios.home.OneUserActivity;
@@ -44,6 +45,7 @@ public class FavUserAdapter extends ArrayAdapter<FavUser> {
         listItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Common.getInstance().setSeluserID(currentUser.getmFUserId());
                 Intent intent = new Intent(mContext, OneUserActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 mContext.startActivity(intent);

@@ -197,12 +197,17 @@ public class HomeActivity extends AppCompatActivity implements CategoryListAdapt
                                             String pdate = theOne.get("publicdate").getAsString();
                                             String status = theOne.get("status").getAsString();
                                             LatLng plocation = new LatLng(Double.parseDouble(latitude), Double.parseDouble(longitude));
-                                            if(status.equals("badge")){
-                                                mAllFeatureProductList.add(new Product(id,userid,categoryid,title,video,price,plocation,pdate,status));
-                                            }
+                                            if(userid.equals(user_id)){
+
+                                            }else{
+                                                if(status.equals("badge")){
+                                                    mAllFeatureProductList.add(new Product(id,userid,categoryid,title,video,price,plocation,pdate,status));
+                                                }
 //
-                                            mAllNearProductList.add(new Product(id,userid,categoryid,title,video,price,plocation,pdate,status));
-                                            mAllProduct.add(new Product(id,userid,categoryid,title,video,price,plocation,pdate,status));
+                                                mAllNearProductList.add(new Product(id,userid,categoryid,title,video,price,plocation,pdate,status));
+                                                mAllProduct.add(new Product(id,userid,categoryid,title,video,price,plocation,pdate,status));
+                                            }
+
                                         }
                                         Common.getInstance().setmAllProduct(mAllProduct);
                                         sortList();
