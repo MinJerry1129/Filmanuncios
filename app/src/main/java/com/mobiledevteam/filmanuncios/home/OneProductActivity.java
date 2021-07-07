@@ -10,8 +10,11 @@ import android.graphics.drawable.ColorDrawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,6 +35,7 @@ import com.mobiledevteam.filmanuncios.Common;
 import com.mobiledevteam.filmanuncios.R;
 import com.mobiledevteam.filmanuncios.model.FavProduct;
 import com.mobiledevteam.filmanuncios.model.FavUser;
+import com.mobiledevteam.filmanuncios.model.Product;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -46,6 +50,9 @@ public class OneProductActivity extends AppCompatActivity implements OnMapReadyC
     private TextView _eyeTxt;
     private TextView _likeTxt;
     private TextView _locationTxt;
+    private ImageView _likeImg;
+    private Button _chatBtn;
+
 
     private SupportMapFragment mapFragment;
 
@@ -61,6 +68,8 @@ public class OneProductActivity extends AppCompatActivity implements OnMapReadyC
     private String product_address;
     private String product_updatedate;
     private String seluser_id;
+    private String userID;
+    private String login_status;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,11 +83,14 @@ public class OneProductActivity extends AppCompatActivity implements OnMapReadyC
         _dateTxt = (TextView)findViewById(R.id.txt_updatedate);
         _eyeTxt = (TextView)findViewById(R.id.txt_eye);
         _likeTxt = (TextView)findViewById(R.id.txt_like);
-        _locationTxt = (TextView)findViewById(R.id. txt_location);
-
+        _locationTxt = (TextView)findViewById(R.id.txt_location);
+        _likeImg = (ImageView)findViewById(R.id.img_like);
+        _chatBtn = (Button)findViewById(R.id.btn_chat);
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         product_id = Common.getInstance().getProduct_id();
+        userID = Common.getInstance().getUserID();
+        login_status = Common.getInstance().getLogin_status();
         setReady();
     }
 
@@ -146,6 +158,13 @@ public class OneProductActivity extends AppCompatActivity implements OnMapReadyC
                 mediaPlayer.setLooping(true);
             }
         });
+        _likeImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setLikeProduct();
+            }
+        });
+
         _priceTxt.setText(product_price + " $");
         _titleTxt.setText(product_title);
         _descriptionTxt.setText(product_description);
@@ -154,6 +173,39 @@ public class OneProductActivity extends AppCompatActivity implements OnMapReadyC
 
         _eyeTxt.setText(product_eye);
         _likeTxt.setText(product_like);
+    }
+
+    private void setLikeProduct() {
+        final ProgressDialog progressDialog = new ProgressDialog(this, R.style.AppTheme_Bright_Dialog);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Set Like...");
+        progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+        JsonObject json = new JsonObject();
+        json.addProperty("userid", userID);
+        json.addProperty("productid", product_id);
+
+        try {
+            Ion.with(this)
+                    .load(Common.getInstance().getBaseURL()+"api/setFavProduct")
+                    .setJsonObjectBody(json)
+                    .asJsonObject()
+                    .setCallback(new FutureCallback<JsonObject>() {
+                        @Override
+                        public void onCompleted(Exception e, JsonObject result) {
+                            progressDialog.dismiss();
+                            Log.d("result::", result.toString());
+                            if (result != null) {
+                                _likeImg.setImageDrawable(getResources().getDrawable(R.drawable.redfav));
+                            } else {
+
+                            }
+                        }
+                    });
+        }catch(Exception e){
+            Toast.makeText(getBaseContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
@@ -173,5 +225,9 @@ public class OneProductActivity extends AppCompatActivity implements OnMapReadyC
                 startActivity(intent);
             }
         });
+        if(login_status.equals("no")){
+            _likeImg.setVisibility(View.GONE);
+            _chatBtn.setVisibility(View.GONE);
+        }
     }
 }

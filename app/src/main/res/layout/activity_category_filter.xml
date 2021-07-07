@@ -71,7 +71,7 @@
                 android:layout_height="wrap_content"
                 app:textAboveThumbsColor="@color/major"
                 rsb:absoluteMaxValue="0"
-                rsb:absoluteMinValue="100000"/>
+                rsb:absoluteMinValue="1000000"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"

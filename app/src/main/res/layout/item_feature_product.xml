@@ -14,11 +14,11 @@
     android:background="@drawable/layout_background_lightgray">
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="150dp">
+        android:layout_height="120dp">
         <ImageView
             android:id="@+id/img_product"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="120dp"
             android:src="@drawable/car"
             android:scaleType="centerCrop"/>
         <ImageView

@@ -189,7 +189,7 @@
         </LinearLayout>
     </ScrollView>
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_signin"
+        android:id="@+id/btn_chat"
         android:layout_width="fill_parent"
         android:layout_height="50dp"
         android:layout_margin="@dimen/_15sdp"

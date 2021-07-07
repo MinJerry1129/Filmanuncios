@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.View;
@@ -17,6 +18,7 @@ import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
+import com.mobiledevteam.filmanuncios.Common;
 import com.mobiledevteam.filmanuncios.R;
 import com.mobiledevteam.filmanuncios.cell.CategoryListAdapter;
 import com.mobiledevteam.filmanuncios.cell.HomeFeatureProductAdapter;
@@ -33,8 +35,16 @@ public class CategoryProductActivity extends AppCompatActivity {
     private RecyclerView _featureproductRecycle,_featureusertRecycle;
     private GridView _nearproductGrid;
 
+
     ArrayList<Product> mAllFeatureProductList = new ArrayList<>();
     ArrayList<Product> mAllNearProductList = new ArrayList<>();
+    ArrayList<Product> mAllProduct = new ArrayList<>();
+    private String selCategoryID;
+    private String minvalue;
+    private String maxvalue;
+    private String duration;
+    private String postdate;
+    private Location my_location;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,9 +61,21 @@ public class CategoryProductActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager_feature_product = new LinearLayoutManager(getBaseContext(), LinearLayoutManager.HORIZONTAL, false);
         _featureproductRecycle.setLayoutManager(layoutManager_feature_product);
         _featureusertRecycle.setLayoutManager(layoutManager_feature_user);
-
+        mAllProduct = Common.getInstance().getmAllProduct();
         setSortSpineer();
         setReady();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        selCategoryID = Common.getInstance().getSelcategoryID();
+        minvalue = Common.getInstance().getMinvalue();
+        maxvalue = Common.getInstance().getMaxvalue();
+        duration = Common.getInstance().getDuration();
+        postdate = Common.getInstance().getPostdate();
+        my_location = Common.getInstance().getMy_location();
+
         getData();
     }
 
@@ -97,29 +119,39 @@ public class CategoryProductActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-//        _nearproductGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Intent intent = new Intent(getApplicationContext(), OneProductActivity.class);
-//                startActivity(intent);
-//            }
-//        });
+        _nearproductGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Common.getInstance().setProduct_id(mAllNearProductList.get(position).getmId());
+                Intent intent = new Intent(getApplicationContext(), OneProductActivity.class);
+                startActivity(intent);
+            }
+        });
     }
     private void getData() {
-//        mAllFeatureProductList.add(new Product("1","1","Porsche Boxster car", "1234567890","300"));
-//        mAllFeatureProductList.add(new Product("2","1","Toyota Auris 5233 car", "1234567890","200"));
-//        mAllFeatureProductList.add(new Product("3","1","Porsche Boxster car", "1234567890","300"));
-//        mAllFeatureProductList.add(new Product("2","1","Toyota Auris 5233 car", "1234567890","400"));
-//        mAllFeatureProductList.add(new Product("4","1","Porsche Boxster car", "1234567890","300"));
-//
-//
-//        mAllNearProductList.add(new Product("1","1","Porsche Boxster car", "1234567890","300"));
-//        mAllNearProductList.add(new Product("2","1","Toyota Auris 5233 car", "1234567890","200"));
-//        mAllNearProductList.add(new Product("3","1","Porsche Boxster car", "1234567890","300"));
-//        mAllNearProductList.add(new Product("2","1","Toyota Auris 5233 car", "1234567890","400"));
-//        mAllNearProductList.add(new Product("4","1","Porsche Boxster car", "1234567890","300"));
-//        initViewFeatureProduct();
-//        initViewNearProduct();
+        mAllFeatureProductList = new ArrayList<>();
+        mAllNearProductList = new ArrayList<>();
+        for(Product oneProduct : mAllProduct){
+            if(oneProduct.getmCategoryID().equals(selCategoryID)){
+
+                if (calculateDistance(oneProduct) < Float.parseFloat(duration)){
+                    if(oneProduct.getmStatus().equals("badge")){
+                        mAllFeatureProductList.add(oneProduct);
+                    }
+                    if (postdate.compareTo(oneProduct.getmPDate()) <= 0){
+                        if ((Integer.parseInt(minvalue)<=Integer.parseInt(oneProduct.getmPrice()))&&(Integer.parseInt(maxvalue)>= Integer.parseInt(oneProduct.getmPrice()))){
+                            mAllNearProductList.add(oneProduct);
+                        }
+
+                    }
+
+                }
+
+            }
+        }
+
+        initViewFeatureProduct();
+        initViewNearProduct();
 //        initViewFeatureUser();
     }
 
@@ -166,5 +198,12 @@ public class CategoryProductActivity extends AppCompatActivity {
                 dp,
                 resources.getDisplayMetrics()
         );
+    }
+    private float calculateDistance(Product oneProduct){
+        Location loc = new Location("");
+        loc.setLatitude(oneProduct.getmLocation().latitude);
+        loc.setLongitude(oneProduct.getmLocation().longitude);
+        float distanceInMeters = my_location.distanceTo(loc);
+        return distanceInMeters;
     }
 }

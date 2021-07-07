@@ -47,8 +47,10 @@ public class CategoryFilterActivity extends AppCompatActivity {
         _categoryImg = (ImageView)findViewById(R.id.img_category);
         _priceSeekBar = (RangeSeekBar)findViewById(R.id.seek_price);
         mCalendar = Calendar.getInstance();
+        _startDateTxt.setText(Common.getInstance().getPostdate());
         setCategorySpineer();
         setLocationSpinner();
+
         setReady();
     }
 
@@ -62,7 +64,7 @@ public class CategoryFilterActivity extends AppCompatActivity {
                 android.R.layout.simple_spinner_item, list);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         _categorySpinner.setAdapter(dataAdapter);
-        _categorySpinner.setSelection(1);
+        _categorySpinner.setSelection(Integer.parseInt(Common.getInstance().getSelcategoryID()));
     }
 
     public void setLocationSpinner() {
@@ -85,7 +87,7 @@ public class CategoryFilterActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 _categoryImg.setImageResource(Common.getInstance().getmCategory().get(position).getmImgurl());
-//                Toast.makeText(getBaseContext(), String.valueOf(_priceSeekBar.getSelectedMinValue()), Toast.LENGTH_LONG).show();
+                Common.getInstance().setSelcategoryID(String.valueOf(position));
             }
 
             @Override
@@ -95,6 +97,19 @@ public class CategoryFilterActivity extends AppCompatActivity {
         _locationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(position == 0){
+                    Common.getInstance().setDuration("250000");
+                }else if(position == 1){
+                    Common.getInstance().setDuration("1000");
+                }else if(position == 2){
+                    Common.getInstance().setDuration("5000");
+                }else if(position == 3){
+                    Common.getInstance().setDuration("10000");
+                }else if(position == 4){
+                    Common.getInstance().setDuration("50000");
+                }else if(position == 5){
+                    Common.getInstance().setDuration("100000");
+                }
             }
 
             @Override
@@ -123,5 +138,14 @@ public class CategoryFilterActivity extends AppCompatActivity {
         String myFormat = "yyyy-MM-dd"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
         _startDateTxt.setText(sdf.format(mCalendar.getTime()));
+        Common.getInstance().setPostdate(sdf.format(mCalendar.getTime()));
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Common.getInstance().setMinvalue(String.valueOf(_priceSeekBar.getSelectedMinValue()));
+        Common.getInstance().setMaxvalue(String.valueOf(_priceSeekBar.getSelectedMaxValue()));
+        //                Toast.makeText(getBaseContext(), String.valueOf(_priceSeekBar.getSelectedMinValue()), Toast.LENGTH_LONG).show();
     }
 }

@@ -102,8 +102,12 @@ public class HomeActivity extends AppCompatActivity implements CategoryListAdapt
         if (login_status.equals("yes")){
             user_id = Common.getInstance().getUserID();
         }
-
         setReady();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         getData();
     }
 
@@ -139,13 +143,14 @@ public class HomeActivity extends AppCompatActivity implements CategoryListAdapt
             }
         });
         initViewCategory();
-//        _nearproductGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Intent intent = new Intent(getApplicationContext(), OneProductActivity.class);
-//                startActivity(intent);
-//            }
-//        });
+        _nearproductGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Common.getInstance().setProduct_id(mAllNearProductList.get(position).getmId());
+                Intent intent = new Intent(getApplicationContext(), OneProductActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void getData() {
@@ -177,22 +182,29 @@ public class HomeActivity extends AppCompatActivity implements CategoryListAdapt
                                     if (result != null) {
                                         mAllFeatureProductList = new ArrayList<>();
                                         mAllNearProductList = new ArrayList<>();
+                                        mAllProduct = new ArrayList<>();
                                         JsonArray product_array = result.get("productsInfo").getAsJsonArray();
                                         for(JsonElement productElement : product_array){
                                             JsonObject theOne = productElement.getAsJsonObject();
                                             String id = theOne.get("id").getAsString();
                                             String userid = theOne.get("userid").getAsString();
+                                            String categoryid = theOne.get("categoryid").getAsString();
                                             String title = theOne.get("title").getAsString();
                                             String price = theOne.get("price").getAsString();
                                             String video = theOne.get("video").getAsString();
                                             String latitude = theOne.get("latitude").getAsString();
                                             String longitude = theOne.get("longitude").getAsString();
+                                            String pdate = theOne.get("publicdate").getAsString();
                                             String status = theOne.get("status").getAsString();
                                             LatLng plocation = new LatLng(Double.parseDouble(latitude), Double.parseDouble(longitude));
-//                                            mAllFeatureProductList.add(new Product(id,userid,title,video,price,plocation));
-//                                            mAllNearProductList.add(new Product(id,userid,title,video,price,plocation));
-                                            mAllProduct.add(new Product(id,userid,title,video,price,plocation,status));
+                                            if(status.equals("badge")){
+                                                mAllFeatureProductList.add(new Product(id,userid,categoryid,title,video,price,plocation,pdate,status));
+                                            }
+//
+                                            mAllNearProductList.add(new Product(id,userid,categoryid,title,video,price,plocation,pdate,status));
+                                            mAllProduct.add(new Product(id,userid,categoryid,title,video,price,plocation,pdate,status));
                                         }
+                                        Common.getInstance().setmAllProduct(mAllProduct);
                                         sortList();
                                         FeatureList();
 
@@ -213,29 +225,33 @@ public class HomeActivity extends AppCompatActivity implements CategoryListAdapt
     }
 
     private void sortList() {
-        if (mAllProduct.size() >1){
+        if (mAllNearProductList.size() >1){
 
-            for (int i=0; i<mAllProduct.size()-1; i++){
-                float distance1 = calculateDistance(mAllProduct.get(i));
-                for(int j=i+1; j<mAllProduct.size(); j++){
-                    float distance2 = calculateDistance(mAllProduct.get(j));
+            for (int i=0; i<mAllNearProductList.size()-1; i++){
+                float distance1 = calculateDistance(mAllNearProductList.get(i));
+                for(int j=i+1; j<mAllNearProductList.size(); j++){
+                    float distance2 = calculateDistance(mAllNearProductList.get(j));
                     if (distance1 > distance2){
-                        Product oneproduct = new Product(mAllProduct.get(i).getmId(), mAllProduct.get(i).getmCompanyId(),mAllProduct.get(i).getmName(), mAllProduct.get(i).getmVideoID(), mAllProduct.get(i).getmPrice(), mAllProduct.get(i).getmLocation(), mAllProduct.get(i).getmStatus());
-                        mAllProduct.get(i).setmId(mAllProduct.get(j).getmId());
-                        mAllProduct.get(i).setmCompanyId(mAllProduct.get(j).getmCompanyId());
-                        mAllProduct.get(i).setmName(mAllProduct.get(j).getmName());
-                        mAllProduct.get(i).setmPrice(mAllProduct.get(j).getmPrice());
-                        mAllProduct.get(i).setmVideoID(mAllProduct.get(j).getmVideoID());
-                        mAllProduct.get(i).setmLocation(mAllProduct.get(j).getmLocation());
-                        mAllProduct.get(i).setmStatus(mAllProduct.get(j).getmStatus());
+                        Product oneproduct = new Product(mAllNearProductList.get(i).getmId(), mAllNearProductList.get(i).getmCompanyId(),mAllNearProductList.get(i).getmCategoryID(),mAllNearProductList.get(i).getmName(), mAllNearProductList.get(i).getmVideoID(), mAllNearProductList.get(i).getmPrice(), mAllNearProductList.get(i).getmLocation(), mAllNearProductList.get(i).getmPDate(), mAllNearProductList.get(i).getmStatus());
+                        mAllNearProductList.get(i).setmId(mAllNearProductList.get(j).getmId());
+                        mAllNearProductList.get(i).setmCompanyId(mAllNearProductList.get(j).getmCompanyId());
+                        mAllNearProductList.get(i).setmCategoryID(mAllNearProductList.get(j).getmCategoryID());
+                        mAllNearProductList.get(i).setmName(mAllNearProductList.get(j).getmName());
+                        mAllNearProductList.get(i).setmPrice(mAllNearProductList.get(j).getmPrice());
+                        mAllNearProductList.get(i).setmVideoID(mAllNearProductList.get(j).getmVideoID());
+                        mAllNearProductList.get(i).setmLocation(mAllNearProductList.get(j).getmLocation());
+                        mAllNearProductList.get(i).setmPDate(mAllNearProductList.get(j).getmPDate());
+                        mAllNearProductList.get(i).setmStatus(mAllNearProductList.get(j).getmStatus());
 
-                        mAllProduct.get(j).setmId(oneproduct.getmId());
-                        mAllProduct.get(j).setmCompanyId(oneproduct.getmCompanyId());
-                        mAllProduct.get(j).setmName(oneproduct.getmName());
-                        mAllProduct.get(j).setmPrice(oneproduct.getmPrice());
-                        mAllProduct.get(j).setmVideoID(oneproduct.getmVideoID());
-                        mAllProduct.get(j).setmLocation(oneproduct.getmLocation());
-                        mAllProduct.get(j).setmStatus(oneproduct.getmStatus());
+                        mAllNearProductList.get(j).setmId(oneproduct.getmId());
+                        mAllNearProductList.get(j).setmCompanyId(oneproduct.getmCompanyId());
+                        mAllNearProductList.get(j).setmCategoryID(oneproduct.getmCategoryID());
+                        mAllNearProductList.get(j).setmName(oneproduct.getmName());
+                        mAllNearProductList.get(j).setmPrice(oneproduct.getmPrice());
+                        mAllNearProductList.get(j).setmVideoID(oneproduct.getmVideoID());
+                        mAllNearProductList.get(j).setmLocation(oneproduct.getmLocation());
+                        mAllNearProductList.get(j).setmPDate(oneproduct.getmPDate());
+                        mAllNearProductList.get(j).setmStatus(oneproduct.getmStatus());
                     }
                 }
             }
@@ -262,15 +278,15 @@ public class HomeActivity extends AppCompatActivity implements CategoryListAdapt
     private void initViewNearProduct(){
         this.runOnUiThread(new Runnable() {
             public void run() {
-                int count_product = mAllProduct.size()/2;
-                if(mAllProduct.size() % 2 == 1){
+                int count_product = mAllNearProductList.size()/2;
+                if(mAllNearProductList.size() % 2 == 1){
                     count_product = count_product + 1;
                 }
                 ViewGroup.LayoutParams layoutParams = _nearproductGrid.getLayoutParams();
                 layoutParams.height = convertDpToPixels(225,getBaseContext()) * count_product; //this is in pixels
                 _nearproductGrid.setLayoutParams(layoutParams);
 
-                HomeNearProductAdapter adapter_product = new HomeNearProductAdapter(getBaseContext(), mAllProduct);
+                HomeNearProductAdapter adapter_product = new HomeNearProductAdapter(getBaseContext(), mAllNearProductList);
                 _nearproductGrid.setAdapter(adapter_product);
             }
         });
@@ -287,6 +303,12 @@ public class HomeActivity extends AppCompatActivity implements CategoryListAdapt
     }
     @Override
     public void onItemClick(int position) {
+        Common.getInstance().setSelcategoryID(String.valueOf(position));
+        Common.getInstance().setMinvalue("0");
+        Common.getInstance().setMaxvalue("1000000");
+        Common.getInstance().setMy_location(my_location);
+        Common.getInstance().setDuration("250000");
+        Common.getInstance().setPostdate("2021-01-01");
         Intent intent = new Intent(getApplicationContext(), CategoryProductActivity.class);
         startActivity(intent);
         Log.d("position", String.valueOf(position));

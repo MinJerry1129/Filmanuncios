@@ -23,6 +23,6 @@ public class FavProduct {
     public String getmName() {
         return mName;
     }
-    public String getmVideoID() {return Common.getInstance().getBaseURL() +mVideoID;}
+    public String getmVideoID() {return mVideoID;}
     public String getmPrice() {return mPrice; }
 }

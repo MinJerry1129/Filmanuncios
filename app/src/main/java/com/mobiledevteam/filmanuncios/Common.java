@@ -1,6 +1,9 @@
 package com.mobiledevteam.filmanuncios;
 
+import android.location.Location;
+
 import com.mobiledevteam.filmanuncios.model.Category;
+import com.mobiledevteam.filmanuncios.model.Product;
 
 import java.util.ArrayList;
 
@@ -11,11 +14,18 @@ public class Common {
     private ArrayList<Category> mCategory;
     private String clinicpagetype;
     private String login_status="no";
-    private String userID;
+    private String userID="0";
     private String imgUrl = "";
     private String upload_category_id = "0";
     private String product_id ;
     private String seluserID;
+    private String selcategoryID;
+    private ArrayList<Product> mAllProduct;
+    private String minvalue;
+    private String maxvalue;
+    private String duration;
+    private String postdate;
+    private Location my_location;
 
     public void Comon(){
         //this.baseURL="http://localhost/jsontest/";
@@ -52,4 +62,25 @@ public class Common {
 
     public String getSeluserID() { return seluserID;}
     public void setSeluserID(String seluserID) {this.seluserID = seluserID;}
+
+    public ArrayList<Product> getmAllProduct() {return mAllProduct;}
+    public void setmAllProduct(ArrayList<Product> mAllProduct) {this.mAllProduct = mAllProduct;}
+
+    public String getSelcategoryID() {return selcategoryID;}
+    public void setSelcategoryID(String selcategoryID) {this.selcategoryID = selcategoryID;}
+
+    public String getDuration() {return duration;}
+    public void setDuration(String duration) {this.duration = duration;}
+
+    public String getMaxvalue() {return maxvalue;}
+    public void setMaxvalue(String maxvalue) {this.maxvalue = maxvalue;}
+
+    public String getMinvalue() { return minvalue;}
+    public void setMinvalue(String minvalue) { this.minvalue = minvalue;}
+
+    public Location getMy_location() { return my_location;}
+    public void setMy_location(Location my_location) {this.my_location = my_location;}
+
+    public String getPostdate() {return postdate;}
+    public void setPostdate(String postdate) {this.postdate = postdate;}
 }

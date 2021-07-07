@@ -8,9 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.VideoView;
 
+import com.bumptech.glide.Glide;
 import com.ct7ct7ct7.androidvimeoplayer.view.VimeoPlayerView;
 import com.mobiledevteam.filmanuncios.Common;
 import com.mobiledevteam.filmanuncios.R;
@@ -41,19 +43,13 @@ public class FavProductAdapter extends ArrayAdapter<FavProduct> {
 //        VimeoPlayerView vimeo_player = listItem.findViewById(R.id.vimeo_product);
 //        vimeo_player.initialize(59777392);
 //
-        VideoView _productVideo = (VideoView)listItem.findViewById(R.id.video_product);
-        _productVideo.setVideoURI(Uri.parse(currentProduct.getmVideoID()));
-        _productVideo.start();
-        _productVideo.requestFocus();
-        _productVideo.setKeepScreenOn(true);
-        _productVideo.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mediaPlayer) {
-                mediaPlayer.setLooping(true);
-            }
-        });
+        ImageView product_image = (ImageView) listItem.findViewById(R.id.img_product);
+        Glide.with(mContext).asBitmap().load(Uri.parse(Common.getInstance().getBaseURL() + currentProduct.getmVideoID())).into(product_image);
+
         TextView name = (TextView) listItem.findViewById(R.id.txt_product_title);
         name.setText(currentProduct.getmName());
+        TextView price = (TextView) listItem.findViewById(R.id.txt_product_price);
+        price.setText(currentProduct.getmPrice() + " $");
         listItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
