@@ -81,6 +81,7 @@
                     android:textColor="@color/black"
                     android:layout_marginBottom="5dp"/>
                 <ImageView
+                    android:id="@+id/img_topbanner"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
                     android:src="@drawable/topbanner"

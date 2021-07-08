@@ -42,7 +42,7 @@ public class YouHomeActivity extends AppCompatActivity {
     private ImageView _imguser;
     private TextView _txtuser;
 
-    private ArrayList<Product> mMyProduct;
+    private ArrayList<Product> mMyProduct = new ArrayList<>();
 
     private String user_id;
     private String username;
@@ -120,6 +120,7 @@ public class YouHomeActivity extends AppCompatActivity {
                         @Override
                         public void onCompleted(Exception e, JsonObject result) {
                             progressDialog.dismiss();
+                            mMyProduct = new ArrayList<>();
                             Log.d("result::", result.toString());
                             if (result != null) {
                                 JsonObject user_object = result.getAsJsonObject("userInfo");
@@ -140,7 +141,7 @@ public class YouHomeActivity extends AppCompatActivity {
                                     String pdate = theOne.get("publicdate").getAsString();
                                     String status = theOne.get("status").getAsString();
                                     LatLng plocation = new LatLng(Double.parseDouble(latitude), Double.parseDouble(longitude));
-                                    mMyProduct.add(new Product(id,user_id,categoryid,title,video,price,plocation,pdate,status));
+//                                    mMyProduct.add(new Product(id,user_id,categoryid,title,video,price,plocation,pdate,status));
                                 }
                                 setData();
                             } else {

@@ -17,6 +17,7 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -25,9 +26,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -60,6 +63,8 @@ public class HomeActivity extends AppCompatActivity implements CategoryListAdapt
     private RecyclerView _categoryReycle;
     private RecyclerView _featureproductRecycle;
     private GridView _nearproductGrid;
+    private ImageView _imageView;
+
     ArrayList<Category> mAllCategoryList = new ArrayList<>();
     ArrayList<Product> mAllFeatureProductList = new ArrayList<>();
     ArrayList<Product> mAllNearProductList = new ArrayList<>();
@@ -76,18 +81,13 @@ public class HomeActivity extends AppCompatActivity implements CategoryListAdapt
         setContentView(R.layout.activity_home);
         locationmanager = (LocationManager) getSystemService(LOCATION_SERVICE);
         String provider = locationmanager.getBestProvider(new Criteria(), true);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        locationmanager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 10, this);
-
-
 
         _menuHome= (LinearLayout)findViewById(R.id.menu_home);
         _menuFav= (LinearLayout)findViewById(R.id.menu_fav);
         _menuUpload= (LinearLayout)findViewById(R.id.menu_upload);
         _menuInbox= (LinearLayout)findViewById(R.id.menu_inbox);
         _menuYou= (LinearLayout)findViewById(R.id.menu_you);
+        _imageView = (ImageView)findViewById(R.id.img_topbanner);
 
         _categoryReycle = (RecyclerView)findViewById(R.id.recycler_category);
         _featureproductRecycle = (RecyclerView)findViewById(R.id.recycler_feature_product);
@@ -102,13 +102,56 @@ public class HomeActivity extends AppCompatActivity implements CategoryListAdapt
         if (login_status.equals("yes")){
             user_id = Common.getInstance().getUserID();
         }
+
+        Glide.with(getBaseContext())
+                .load(R.drawable.animation)
+                .into(_imageView);
         setReady();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        getData();
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        locationmanager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 100, this);
+
+//        getData();
+    }
+
+//    public void onDestroy() {
+//        Log.e(TAG, "onDestroy");
+//        super.onDestroy();
+//        if (mLocationManager != null) {
+//            for (int i = 0; i < mLocationListeners.length; i++) {
+//                try {
+//                    mLocationManager.removeUpdates(mLocationListeners[i]);
+//                } catch (Exception ex) {
+//                    Log.i(TAG, "fail to remove location listners, ignore", ex);
+//                }
+//            }
+//        }
+//    }
+
+
+    @Override
+    protected void onDestroy() {
+        locationmanager.removeUpdates(this);
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onPause() {
+        locationmanager.removeUpdates(this);
+        Log.d("pause::", "paused");
+        super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        locationmanager.removeUpdates(this);
+        super.onStop();
     }
 
     private void setReady() {
@@ -222,7 +265,7 @@ public class HomeActivity extends AppCompatActivity implements CategoryListAdapt
                     Toast.makeText(getBaseContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
-        },6000);
+        },500);
     }
 
     private void FeatureList() {
@@ -345,15 +388,15 @@ public class HomeActivity extends AppCompatActivity implements CategoryListAdapt
 
     }
     private void onGoUpload(){
-        if (login_status.equals("no")){
-            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-            startActivity(intent);
-            finish();
-        }else{
+//        if (login_status.equals("no")){
+//            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+//            startActivity(intent);
+//            finish();
+//        }else{
             Intent intent = new Intent(getApplicationContext(), UploadHomeActivity.class);
             startActivity(intent);
             finish();
-        }
+//        }
 
     }
 
@@ -391,6 +434,7 @@ public class HomeActivity extends AppCompatActivity implements CategoryListAdapt
     public void onLocationChanged(Location location) {
         my_location = location;
         Log.d("Location:::", String.valueOf( location.getLatitude()));
+        getData();
     }
 
     @Override

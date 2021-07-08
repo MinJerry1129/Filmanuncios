@@ -143,13 +143,9 @@ public class UploadProductActivity extends AppCompatActivity {
                                 String status = result.get("status").getAsString();
                                 if (status.equals("ok")) {
 //                                    signup_status = "yes";
-                                    Toast.makeText(getBaseContext(),"Signup Successfully, please login!", Toast.LENGTH_LONG).show();
-                                }else if (status.equals("userexist")) {
-                                    Toast.makeText(getBaseContext(),"Username already exist, change username!", Toast.LENGTH_LONG).show();
-                                }else if (status.equals("existemail")) {
-                                    Toast.makeText(getBaseContext(),"Email already exist, Please check again!", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getBaseContext(),"Add Product Successfully, please login!", Toast.LENGTH_LONG).show();
                                 }else{
-                                    Toast.makeText(getBaseContext(),"Fail signup", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getBaseContext(),"Fail Add Product", Toast.LENGTH_LONG).show();
                                 }
                             } else {
                             }
@@ -168,6 +164,7 @@ public class UploadProductActivity extends AppCompatActivity {
         if (requestCode == VideoPicker.VIDEO_PICKER_REQUEST_CODE && resultCode == RESULT_OK) {
             mPaths =  data.getStringArrayListExtra(VideoPicker.EXTRA_VIDEO_PATH);
             //Your Code
+            sel_video = "yes";
             _productVideo.setVideoPath(mPaths.get(0));
             _productVideo.start();
             _productVideo.setVisibility(View.VISIBLE);

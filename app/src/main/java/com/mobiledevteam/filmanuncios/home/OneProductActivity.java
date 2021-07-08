@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -51,6 +52,7 @@ public class OneProductActivity extends AppCompatActivity implements OnMapReadyC
     private TextView _likeTxt;
     private TextView _locationTxt;
     private ImageView _likeImg;
+    private ImageView _imageView;
     private Button _chatBtn;
 
 
@@ -86,8 +88,12 @@ public class OneProductActivity extends AppCompatActivity implements OnMapReadyC
         _locationTxt = (TextView)findViewById(R.id.txt_location);
         _likeImg = (ImageView)findViewById(R.id.img_like);
         _chatBtn = (Button)findViewById(R.id.btn_chat);
+        _imageView = (ImageView)findViewById(R.id.img_topbanner);
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
+        Glide.with(getBaseContext())
+                .load(R.drawable.animation)
+                .into(_imageView);
         product_id = Common.getInstance().getProduct_id();
         userID = Common.getInstance().getUserID();
         login_status = Common.getInstance().getLogin_status();
