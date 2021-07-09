@@ -10,8 +10,10 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.media.MediaMetadataRetriever;
+import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -101,6 +103,7 @@ public class UploadProductActivity extends AppCompatActivity {
             return;
         }
         String base64 = "";
+
         File file = new File(mPaths.get(0));
         byte[] buffer = new byte[(int) file.length() + 100];
         @SuppressWarnings("resource")
@@ -143,7 +146,8 @@ public class UploadProductActivity extends AppCompatActivity {
                                 String status = result.get("status").getAsString();
                                 if (status.equals("ok")) {
 //                                    signup_status = "yes";
-                                    Toast.makeText(getBaseContext(),"Add Product Successfully, please login!", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getBaseContext(),"Add Product Successfully!", Toast.LENGTH_LONG).show();
+                                    finish();
                                 }else{
                                     Toast.makeText(getBaseContext(),"Fail Add Product", Toast.LENGTH_LONG).show();
                                 }
@@ -174,7 +178,7 @@ public class UploadProductActivity extends AppCompatActivity {
             String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
             durationMs = Integer.parseInt(time);
             retriever.release();
-            retriever.close();
+//            retriever.close();
 
 
 

@@ -58,6 +58,8 @@ dependencies {
     //vimeoplayer
     implementation 'com.ct7ct7ct7.androidvimeoplayer:library:1.1.0'
     //videopicker
+    implementation 'io.reactivex.rxjava2:rxandroid:1.0.0'
+    implementation 'io.reactivex.rxjava2:rxjava:1.0.0'
     implementation 'net.alhazmy13.MediaPicker:libary:2.4.4'
     //imagepicker
     implementation 'com.github.dhaval2404:imagepicker:1.8'

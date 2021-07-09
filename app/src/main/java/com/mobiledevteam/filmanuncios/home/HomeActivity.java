@@ -388,15 +388,15 @@ public class HomeActivity extends AppCompatActivity implements CategoryListAdapt
 
     }
     private void onGoUpload(){
-//        if (login_status.equals("no")){
-//            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-//            startActivity(intent);
-//            finish();
-//        }else{
+        if (login_status.equals("no")){
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+            startActivity(intent);
+            finish();
+        }else{
             Intent intent = new Intent(getApplicationContext(), UploadHomeActivity.class);
             startActivity(intent);
             finish();
-//        }
+        }
 
     }
 
@@ -410,8 +410,8 @@ public class HomeActivity extends AppCompatActivity implements CategoryListAdapt
             startActivity(intent);
             finish();
         }
-
     }
+
     private void onGoYou(){
         if (login_status.equals("no")){
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
