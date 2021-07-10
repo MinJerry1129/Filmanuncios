@@ -39,6 +39,10 @@ public class YouHomeActivity extends AppCompatActivity {
     private LinearLayout _menuUpload;
     private LinearLayout _menuInbox;
     private LinearLayout _menuYou;
+
+    private LinearLayout _user;
+    private LinearLayout _product;
+
     private ImageView _imguser;
     private TextView _txtuser;
 
@@ -60,6 +64,9 @@ public class YouHomeActivity extends AppCompatActivity {
         _menuUpload= (LinearLayout)findViewById(R.id.menu_upload);
         _menuInbox= (LinearLayout)findViewById(R.id.menu_inbox);
         _menuYou= (LinearLayout)findViewById(R.id.menu_you);
+
+        _user = (LinearLayout)findViewById(R.id.layout_user);
+        _product = (LinearLayout)findViewById(R.id.layout_product);
 
         _imguser = (ImageView)findViewById(R.id.img_user);
         _txtuser = (TextView)findViewById(R.id.txt_username);
@@ -100,7 +107,20 @@ public class YouHomeActivity extends AppCompatActivity {
                 onGoYou();
             }
         });
+
+        _product.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onGoProduct();
+            }
+        });
     }
+
+    private void onGoProduct() {
+        Intent intent = new Intent(getApplicationContext(), UserProductListActivity.class);
+        startActivity(intent);
+    }
+
     private void getData() {
         final ProgressDialog progressDialog = new ProgressDialog(this, R.style.AppTheme_Bright_Dialog);
         progressDialog.setIndeterminate(true);
@@ -141,8 +161,9 @@ public class YouHomeActivity extends AppCompatActivity {
                                     String pdate = theOne.get("publicdate").getAsString();
                                     String status = theOne.get("status").getAsString();
                                     LatLng plocation = new LatLng(Double.parseDouble(latitude), Double.parseDouble(longitude));
-//                                    mMyProduct.add(new Product(id,user_id,categoryid,title,video,price,plocation,pdate,status));
+                                    mMyProduct.add(new Product(id,user_id,categoryid,title,video,price,plocation,pdate,status));
                                 }
+                                Common.getInstance().setmMyProduct(mMyProduct);
                                 setData();
                             } else {
 

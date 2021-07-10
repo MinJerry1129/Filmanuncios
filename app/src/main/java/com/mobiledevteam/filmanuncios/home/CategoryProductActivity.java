@@ -55,7 +55,7 @@ public class CategoryProductActivity extends AppCompatActivity {
         _locationLayout = (LinearLayout)findViewById(R.id.layout_location);
 
         _featureproductRecycle = (RecyclerView)findViewById(R.id.recycler_feature_product);
-        _featureusertRecycle = (RecyclerView)findViewById(R.id.recycler_feature_user);
+//        _featureusertRecycle = (RecyclerView)findViewById(R.id.recycler_feature_user);
         _nearproductGrid = (GridView) findViewById(R.id.grid_near_product);
         LinearLayoutManager layoutManager_feature_user = new LinearLayoutManager(getBaseContext(), LinearLayoutManager.HORIZONTAL, false);
         LinearLayoutManager layoutManager_feature_product = new LinearLayoutManager(getBaseContext(), LinearLayoutManager.HORIZONTAL, false);

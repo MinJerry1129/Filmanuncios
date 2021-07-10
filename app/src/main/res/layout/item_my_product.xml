@@ -30,6 +30,7 @@
             android:layout_alignParentRight="true"
             android:layout_margin="10dp"
             android:scaleType="centerCrop"
+            android:visibility="gone"
             />
     </RelativeLayout>
 
