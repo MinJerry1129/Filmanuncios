@@ -76,6 +76,12 @@ public class YouHomeActivity extends AppCompatActivity {
         getData();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        getData();
+    }
+
     private void setReady() {
         _menuHome.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,6 +120,17 @@ public class YouHomeActivity extends AppCompatActivity {
                 onGoProduct();
             }
         });
+        _user.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onGoUserInfo();
+            }
+        });
+    }
+
+    private void onGoUserInfo() {
+        Intent intent = new Intent(getApplicationContext(), UserInfoActivity.class);
+        startActivity(intent);
     }
 
     private void onGoProduct() {

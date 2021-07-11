@@ -68,6 +68,9 @@
     <string name="upload_product_price">Price($)</string>
     <string name="upload_button">Upload Product</string>
 
+    <string name="update_button">Upload Product</string>
+    <string name="badge_button">Set Badge</string>
+
     <string name="update">Update</string>
     <string name="userinf">User Information</string>
 
