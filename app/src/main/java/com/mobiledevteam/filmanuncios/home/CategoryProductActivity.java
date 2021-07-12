@@ -57,10 +57,10 @@ public class CategoryProductActivity extends AppCompatActivity {
         _featureproductRecycle = (RecyclerView)findViewById(R.id.recycler_feature_product);
 //        _featureusertRecycle = (RecyclerView)findViewById(R.id.recycler_feature_user);
         _nearproductGrid = (GridView) findViewById(R.id.grid_near_product);
-        LinearLayoutManager layoutManager_feature_user = new LinearLayoutManager(getBaseContext(), LinearLayoutManager.HORIZONTAL, false);
+//        LinearLayoutManager layoutManager_feature_user = new LinearLayoutManager(getBaseContext(), LinearLayoutManager.HORIZONTAL, false);
         LinearLayoutManager layoutManager_feature_product = new LinearLayoutManager(getBaseContext(), LinearLayoutManager.HORIZONTAL, false);
         _featureproductRecycle.setLayoutManager(layoutManager_feature_product);
-        _featureusertRecycle.setLayoutManager(layoutManager_feature_user);
+//        _featureusertRecycle.setLayoutManager(layoutManager_feature_user);
         mAllProduct = Common.getInstance().getmAllProduct();
         setSortSpineer();
         setReady();
@@ -131,27 +131,31 @@ public class CategoryProductActivity extends AppCompatActivity {
     private void getData() {
         mAllFeatureProductList = new ArrayList<>();
         mAllNearProductList = new ArrayList<>();
-        for(Product oneProduct : mAllProduct){
-            if(oneProduct.getmCategoryID().equals(selCategoryID)){
+        if (mAllProduct.size() > 0){
+            for(Product oneProduct : mAllProduct){
+                if(oneProduct.getmCategoryID().equals(selCategoryID)){
 
-                if (calculateDistance(oneProduct) < Float.parseFloat(duration)){
-                    if(oneProduct.getmStatus().equals("badge")){
-                        mAllFeatureProductList.add(oneProduct);
-                    }
-                    if (postdate.compareTo(oneProduct.getmPDate()) <= 0){
-                        if ((Integer.parseInt(minvalue)<=Integer.parseInt(oneProduct.getmPrice()))&&(Integer.parseInt(maxvalue)>= Integer.parseInt(oneProduct.getmPrice()))){
-                            mAllNearProductList.add(oneProduct);
+                    if (calculateDistance(oneProduct) < Float.parseFloat(duration)){
+                        if(oneProduct.getmStatus().equals("badge")){
+                            mAllFeatureProductList.add(oneProduct);
+                        }
+                        if (postdate.compareTo(oneProduct.getmPDate()) <= 0){
+                            if ((Integer.parseInt(minvalue)<=Integer.parseInt(oneProduct.getmPrice()))&&(Integer.parseInt(maxvalue)>= Integer.parseInt(oneProduct.getmPrice()))){
+                                mAllNearProductList.add(oneProduct);
+                            }
+
                         }
 
                     }
 
                 }
-
             }
+            initViewFeatureProduct();
+            initViewNearProduct();
         }
 
-        initViewFeatureProduct();
-        initViewNearProduct();
+
+
 //        initViewFeatureUser();
     }
 

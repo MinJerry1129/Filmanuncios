@@ -52,15 +52,7 @@ public class MyProductAdapter extends ArrayAdapter<Product> {
         name.setText(currentProduct.getmName());
         TextView price = (TextView) listItem.findViewById(R.id.txt_product_price);
         price.setText(currentProduct.getmPrice() + " $");
-        listItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Common.getInstance().setProduct_id(currentProduct.getmId());
-                Intent intent = new Intent(mContext, UserProductActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                mContext.startActivity(intent);
-            }
-        });
+
         return listItem;
     }
 }

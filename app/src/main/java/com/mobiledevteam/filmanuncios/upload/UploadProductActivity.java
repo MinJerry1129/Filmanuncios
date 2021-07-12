@@ -179,9 +179,6 @@ public class UploadProductActivity extends AppCompatActivity {
             durationMs = Integer.parseInt(time);
             retriever.release();
 //            retriever.close();
-
-
-
         }
     }
 

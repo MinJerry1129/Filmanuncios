@@ -178,9 +178,6 @@ public class UserInfoActivity extends AppCompatActivity {
             userimage = Base64.encodeToString(b, Base64.DEFAULT);
         }
 
-
-
-
         // TODO: Implement your own signup logic here.
         JsonObject json = new JsonObject();
         json.addProperty("userid",user_id);
