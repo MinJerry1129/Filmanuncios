@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "723081642588",
+    "project_id": "filmanuncios-23028",
+    "storage_bucket": "filmanuncios-23028.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:723081642588:android:abee51bb8cdf4da6a65c99",
+        "android_client_info": {
+          "package_name": "com.mobiledevteam.filmanuncios"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "723081642588-henhb6ivoenk3l5ttsp1hg5nvkvbkj84.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDfdpdJ_JjaiaMeecERDmvZptv4YNESfPE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "723081642588-henhb6ivoenk3l5ttsp1hg5nvkvbkj84.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

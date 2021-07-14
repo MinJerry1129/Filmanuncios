@@ -13,5 +13,8 @@
     <color name="darkgray">#919191</color>
     <color name="lightgray">#D5D5D5</color>
     <color name="lightWhite">#F3F3F3</color>
+    <color name="yellow1">#D49500</color>
+    <color name="green1">#258B82</color>
+    <color name="colorAccent">#D81B60</color>
 
 </resources>
