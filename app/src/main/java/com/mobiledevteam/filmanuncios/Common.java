@@ -4,13 +4,14 @@ import android.location.Location;
 
 import com.mobiledevteam.filmanuncios.model.Category;
 import com.mobiledevteam.filmanuncios.model.Product;
+import com.mobiledevteam.filmanuncios.model.User;
 
 import java.util.ArrayList;
 
 public class Common {
     private static Common instance = new Common();
-    private String baseURL = "http://todoloanuncio.com/";
-//    private String baseURL = "http://10.0.2.2/filma/";
+//    private String baseURL = "http://todoloanuncio.com/";
+    private String baseURL = "http://10.0.2.2/filma/";
     private ArrayList<Category> mCategory;
     private String clinicpagetype;
     private String login_status="no";
@@ -22,6 +23,7 @@ public class Common {
     private String selcategoryID;
     private ArrayList<Product> mAllProduct= new ArrayList<>();
     private ArrayList<Product> mMyProduct = new ArrayList<>();
+    private ArrayList<User> mChatUSer = new ArrayList<>();
     private String minvalue;
     private String maxvalue;
     private String duration;
@@ -87,4 +89,7 @@ public class Common {
 
     public ArrayList<Product> getmMyProduct() {return mMyProduct;}
     public void setmMyProduct(ArrayList<Product> mMyProduct) {this.mMyProduct = mMyProduct;}
+
+    public ArrayList<User> getmChatUSer() {return mChatUSer; }
+    public void setmChatUSer(ArrayList<User> mChatUSer) {this.mChatUSer = mChatUSer;}
 }

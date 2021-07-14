@@ -27,6 +27,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -34,12 +36,16 @@ import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.mobiledevteam.filmanuncios.Common;
 import com.mobiledevteam.filmanuncios.R;
+import com.mobiledevteam.filmanuncios.inbox.ChatActivity;
+import com.mobiledevteam.filmanuncios.inbox.InboxHomeActivity;
 import com.mobiledevteam.filmanuncios.model.FavProduct;
 import com.mobiledevteam.filmanuncios.model.FavUser;
 import com.mobiledevteam.filmanuncios.model.Product;
 
 import java.io.IOException;
 import java.util.ArrayList;
+
+import co.intentservice.chatui.models.ChatMessage;
 
 public class OneProductActivity extends AppCompatActivity implements OnMapReadyCallback {
     private LinearLayout _userLayout;
@@ -73,6 +79,10 @@ public class OneProductActivity extends AppCompatActivity implements OnMapReadyC
     private String userID;
     private String login_status;
 
+    FirebaseDatabase database;
+    DatabaseReference myMsgRef;
+    DatabaseReference oppMsgRef;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,6 +99,8 @@ public class OneProductActivity extends AppCompatActivity implements OnMapReadyC
         _likeImg = (ImageView)findViewById(R.id.img_like);
         _chatBtn = (Button)findViewById(R.id.btn_chat);
         _imageView = (ImageView)findViewById(R.id.img_topbanner);
+
+
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         Glide.with(getBaseContext())
@@ -97,6 +109,8 @@ public class OneProductActivity extends AppCompatActivity implements OnMapReadyC
         product_id = Common.getInstance().getProduct_id();
         userID = Common.getInstance().getUserID();
         login_status = Common.getInstance().getLogin_status();
+        database = FirebaseDatabase.getInstance();
+
         setReady();
     }
 
@@ -141,6 +155,9 @@ public class OneProductActivity extends AppCompatActivity implements OnMapReadyC
 
                                 product_eye = result.get("productEye").getAsString();
                                 product_like = result.get("productlike").getAsString();
+                                Common.getInstance().setSeluserID(seluser_id);
+                                myMsgRef = database.getReference("chat/user/" + userID + "/" + seluser_id);
+                                oppMsgRef = database.getReference("chat/user/"+ seluser_id + "/" + userID);
                                 setData();
                                 mapFragment.getMapAsync(OneProductActivity.this::onMapReady);
                             } else {
@@ -235,5 +252,65 @@ public class OneProductActivity extends AppCompatActivity implements OnMapReadyC
             _likeImg.setVisibility(View.GONE);
             _chatBtn.setVisibility(View.GONE);
         }
+        _chatBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                long timestamp = System.currentTimeMillis();
+                Log.d("userID::", userID);
+                Log.d("seluser_id::", seluser_id);
+                Log.d("timestamp::", String.valueOf(timestamp));
+
+
+                final ProgressDialog progressDialog = new ProgressDialog(OneProductActivity.this, R.style.AppTheme_Bright_Dialog);
+                progressDialog.setIndeterminate(true);
+                progressDialog.setMessage("Set ChatUser...");
+                progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                progressDialog.setCancelable(false);
+                progressDialog.show();
+                JsonObject json = new JsonObject();
+                json.addProperty("userid", userID);
+                json.addProperty("seluserid", seluser_id);
+                json.addProperty("timestamp", String.valueOf(timestamp));
+//
+                try {
+                    Ion.with(OneProductActivity.this)
+                            .load(Common.getInstance().getBaseURL()+"api/setChatUser")
+                            .setJsonObjectBody(json)
+                            .asJsonObject()
+                            .setCallback(new FutureCallback<JsonObject>() {
+                                @Override
+                                public void onCompleted(Exception e, JsonObject result) {
+                                    progressDialog.dismiss();
+                                    Log.d("result::", result.toString());
+                                    if (result != null) {
+                                        String status = result.get("result").getAsString();
+                                        Log.d("status::", status);
+                                        if(status.equals("exist")){
+                                            Intent intent = new Intent(OneProductActivity.this, ChatActivity.class);
+                                            startActivity(intent);
+                                            finish();
+
+                                        }else if(status.equals("ok")){
+                                            ChatMessage chatMessage = new ChatMessage("Hi", timestamp, ChatMessage.Type.SENT,"yes");
+                                            myMsgRef.push().setValue(chatMessage);
+                                            ChatMessage chatMessage1 = new ChatMessage("Hi", timestamp, ChatMessage.Type.RECEIVED,"no");
+                                            oppMsgRef.push().setValue(chatMessage1);
+                                            Intent intent = new Intent(OneProductActivity.this, ChatActivity.class);
+                                            startActivity(intent);
+                                            finish();
+                                        }else{
+                                            Toast.makeText(getBaseContext(), "Fail set chat user!", Toast.LENGTH_LONG).show();
+                                        }
+
+                                    } else {
+
+                                    }
+                                }
+                            });
+                }catch(Exception e){
+                    Toast.makeText(getBaseContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            }
+        });
     }
 }

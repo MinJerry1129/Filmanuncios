@@ -1,6 +1,7 @@
 package com.mobiledevteam.filmanuncios.cell;
 
 import android.content.Context;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,7 +32,7 @@ public class ChatListAdapter extends ArrayAdapter<User> {
     DatabaseReference myMsgRef;
     DatabaseReference oppMsgRef;
     String user_id;
-    String agency_id;
+    String seluser_id;
     private Context mContext;
     private List<User> allUserList = new ArrayList<>();
 
@@ -46,13 +48,12 @@ public class ChatListAdapter extends ArrayAdapter<User> {
         if(listItem == null)
             listItem = LayoutInflater.from(mContext).inflate(R.layout.item_chatlist,parent,false);
 
+        user_id = Common.getInstance().getUserID();
         User currentMovie = allUserList.get(position);
-
-        agency_id = Common.getInstance().getSeluserID();
-        user_id = currentMovie.getmId();
+        seluser_id = currentMovie.getmId();
 
         database = FirebaseDatabase.getInstance();
-        myMsgRef = database.getReference("chat/agency/" + agency_id + "/" + user_id);
+        myMsgRef = database.getReference("chat/user/" + user_id + "/" + seluser_id);
 
         final TextView _chat_message = (TextView) listItem.findViewById(R.id.chat_count);
         _chat_message.setVisibility(View.INVISIBLE);
@@ -82,8 +83,8 @@ public class ChatListAdapter extends ArrayAdapter<User> {
             }
         });
 
-        ImageView office_image = (ImageView) listItem.findViewById(R.id.officeimage);
-        office_image.setImageResource(R.drawable.logo);
+        ImageView user_image = (ImageView) listItem.findViewById(R.id.img_user);
+        Glide.with(mContext).asBitmap().load(Uri.parse(Common.getInstance().getBaseURL() + currentMovie.getmPhoto())).into(user_image);
 
         TextView name = (TextView) listItem.findViewById(R.id.username);
         name.setText(currentMovie.getmUsername());

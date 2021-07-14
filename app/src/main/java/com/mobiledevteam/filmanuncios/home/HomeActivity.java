@@ -221,7 +221,7 @@ public class HomeActivity extends AppCompatActivity implements CategoryListAdapt
                                 @Override
                                 public void onCompleted(Exception e, JsonObject result) {
                                     progressDialog.dismiss();
-                                    Log.d("result::", result.toString());
+//                                    Log.d("result::", result.toString());
                                     if (result != null) {
                                         mAllFeatureProductList = new ArrayList<>();
                                         mAllNearProductList = new ArrayList<>();
@@ -257,7 +257,7 @@ public class HomeActivity extends AppCompatActivity implements CategoryListAdapt
                                         FeatureList();
 
                                     } else {
-
+                                        Toast.makeText(getBaseContext(), "Please check the Internet", Toast.LENGTH_LONG).show();
                                     }
                                 }
                             });
