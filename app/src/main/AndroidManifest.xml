@@ -22,7 +22,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Filmanuncios"
         android:usesCleartextTraffic="true">
-        <activity android:name=".inbox.ChatActivity"></activity>
+        <activity android:name=".you.SetBadgeActivity"></activity>
+        <activity android:name=".inbox.ChatActivity" />
         <activity android:name=".you.AboutActivity" />
         <activity android:name=".you.UserProActivity" />
         <activity android:name=".you.UserProductActivity" />

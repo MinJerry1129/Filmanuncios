@@ -29,6 +29,7 @@ import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.mobiledevteam.filmanuncios.Common;
 import com.mobiledevteam.filmanuncios.R;
+import com.mobiledevteam.filmanuncios.you.SetBadgeActivity;
 
 import net.alhazmy13.mediapicker.Video.VideoPicker;
 
@@ -147,6 +148,8 @@ public class UploadProductActivity extends AppCompatActivity {
                                 if (status.equals("ok")) {
 //                                    signup_status = "yes";
                                     Toast.makeText(getBaseContext(),"Add Product Successfully!", Toast.LENGTH_LONG).show();
+                                    Intent intent = new Intent(getApplicationContext(), SetBadgeActivity.class);
+                                    startActivity(intent);
                                     finish();
                                 }else{
                                     Toast.makeText(getBaseContext(),"Fail Add Product", Toast.LENGTH_LONG).show();

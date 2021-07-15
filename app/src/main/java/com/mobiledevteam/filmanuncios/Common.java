@@ -10,8 +10,8 @@ import java.util.ArrayList;
 
 public class Common {
     private static Common instance = new Common();
-//    private String baseURL = "http://todoloanuncio.com/";
-    private String baseURL = "http://10.0.2.2/filma/";
+    private String baseURL = "http://todoloanuncio.com/";
+//    private String baseURL = "http://10.0.2.2/filma/";
     private ArrayList<Category> mCategory;
     private String clinicpagetype;
     private String login_status="no";

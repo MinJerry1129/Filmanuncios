@@ -73,4 +73,8 @@
     <string name="update">Update</string>
     <string name="userinf">User Information</string>
 
+    <string name="pay_7day">7 días</string>
+    <string name="pay_15day">15 días</string>
+    <string name="pay_30day">30 días</string>
+
 </resources>
